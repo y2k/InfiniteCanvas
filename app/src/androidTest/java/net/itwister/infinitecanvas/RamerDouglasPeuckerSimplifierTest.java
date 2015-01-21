@@ -19,12 +19,12 @@ public class RamerDouglasPeuckerSimplifierTest extends AndroidTestCase {
             new PointF(1, 1),
     };
 
-    private RamerDouglasPeuckerSimplifier simplifier;
+    private RamerDouglasPeuckerOptimizer simplifier;
 
     @Override
     protected void setUp() throws Exception {
         super.setUp();
-        simplifier = new RamerDouglasPeuckerSimplifier();
+        simplifier = new RamerDouglasPeuckerOptimizer();
         simplifier.setPoints(TEST_POINTS);
     }
 

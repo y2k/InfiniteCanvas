@@ -1,6 +1,5 @@
 package net.itwister.infinitecanvas;
 
-import android.graphics.Point;
 import android.graphics.PointF;
 
 import java.util.ArrayList;
@@ -10,22 +9,21 @@ import java.util.List;
 /**
  * Created on 1/21/2015.
  */
-public class RamerDouglasPeuckerSimplifier {
+public class RamerDouglasPeuckerOptimizer {
 
     private float epsilon;
-    private PointF[] points;
+    private List<PointF> points;
 
     public void setEpsilon(float epsilon) {
         this.epsilon = epsilon;
     }
 
-    public void setPoints(PointF[] points) {
+    public void setPoints(List<PointF> points) {
         this.points = points;
     }
 
-    public PointF[] compute() {
-        List<PointF> result = douglasPeucker(Arrays.asList(points), 0, points.length - 1, epsilon / 20);
-        return result.toArray(new PointF[result.size()]);
+    public List<PointF> compute() {
+        return douglasPeucker(points, 0, points.size() - 1, epsilon);
     }
 
     private static List<PointF> douglasPeucker(List<PointF> points, int startIndex, int lastIndex, float epsilon) {
