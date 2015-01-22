@@ -32,4 +32,8 @@ class Curve {
     public Iterable<PointF> getPoints() {
         return points;
     }
+
+    public boolean isValid() {
+        return points.size() >= 2;
+    }
 }

@@ -1,6 +1,7 @@
 package net.itwister.infinitecanvas.canvas;
 
 import android.graphics.PointF;
+import android.util.Log;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,12 +25,15 @@ class InfiniteCanvas extends Observable {
     }
 
     public void addPoint(float x, float y) {
-        lastCurves().addPoint(x, y);
+        lastCurves().addPoint(x - offset.x, y - offset.y);
         notifyCurvesChanged();
     }
 
     public void endCurve() {
-        lastCurves().optimize();
+        if (lastCurves().isValid())
+            lastCurves().optimize();
+        else
+            curves.remove(lastCurves());
         notifyCurvesChanged();
     }
 
@@ -41,14 +45,22 @@ class InfiniteCanvas extends Observable {
         return new FloatArraySerializer(curves).serialize();
     }
 
-    public void offset(float x, float y) {
-        offset.x = x;
-        offset.y = y;
-        notifyObservers();
+    public void addOffset(float x, float y) {
+        offset.x += x;
+        offset.y += y;
+        notifyCurvesChanged();
+    }
+
+    public PointF getOffset() {
+        return offset;
     }
 
     private void notifyCurvesChanged() {
         setChanged();
         notifyObservers();
+    }
+
+    public void dump() {
+        Log.v("InfiniteCanvas", "offset.x = " + offset.x + ", offset.y = " + offset.y);
     }
 }

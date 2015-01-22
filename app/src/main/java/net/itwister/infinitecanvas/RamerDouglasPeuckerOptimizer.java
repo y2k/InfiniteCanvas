@@ -23,7 +23,9 @@ public class RamerDouglasPeuckerOptimizer {
     }
 
     public List<PointF> compute() {
-        return douglasPeucker(points, 0, points.size() - 1, epsilon);
+        return points.size() > 3
+                ? douglasPeucker(points, 0, points.size() - 1, epsilon)
+                : points;
     }
 
     private static List<PointF> douglasPeucker(List<PointF> points, int startIndex, int lastIndex, float epsilon) {

@@ -9,8 +9,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import net.itwister.infinitecanvas.canvas.InfiniteCanvas;
-
 import java.util.Observable;
 import java.util.Observer;
 
@@ -40,17 +38,12 @@ public class InfiniteCanvasView extends View implements Observer {
     public boolean onTouchEvent(MotionEvent event) {
         switch (event.getAction()) {
             case MotionEvent.ACTION_DOWN:
-                if (event.getPointerCount() > 1) {
-                    // TODO
-                    startMovePoint = new PointF(event.getX(), event.getY());
-                } else {
-                    infiniteCanvas.beginCurve();
-                }
+                startMovePoint = new PointF(event.getX(), event.getY());
+                infiniteCanvas.beginCurve();
                 break;
             case MotionEvent.ACTION_MOVE:
                 if (event.getPointerCount() > 1) {
-                    // TODO
-                    infiniteCanvas.offset(event.getX() - startMovePoint.x, event.getY() - startMovePoint.y);
+                    infiniteCanvas.addOffset(event.getX() - startMovePoint.x, event.getY() - startMovePoint.y);
                     startMovePoint = new PointF(event.getX(), event.getY());
                 } else {
                     infiniteCanvas.addPoint(event.getX(), event.getY());
@@ -58,6 +51,7 @@ public class InfiniteCanvasView extends View implements Observer {
                 break;
             case MotionEvent.ACTION_UP:
                 infiniteCanvas.endCurve();
+                startMovePoint = null;
                 break;
         }
         return true;
@@ -76,6 +70,7 @@ public class InfiniteCanvasView extends View implements Observer {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        canvas.translate(infiniteCanvas.getOffset().x, infiniteCanvas.getOffset().y);
         canvas.drawLines(infiniteCanvas.getVisibleScene(), defaultPaint);
     }
 }

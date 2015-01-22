@@ -2,6 +2,7 @@ package net.itwister.infinitecanvas.canvas;
 
 import android.graphics.PointF;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -17,6 +18,7 @@ class FloatArraySerializer {
     }
 
     float[] serialize() {
+        clearFromNotValidCurves();
         buffer = new float[computeBufferSize()];
 
         int pos = 0;
@@ -31,6 +33,14 @@ class FloatArraySerializer {
             }
         }
         return buffer;
+    }
+
+    private void clearFromNotValidCurves() {
+        List<Curve> validCurves = new ArrayList<>();
+        for (Curve i : curves)
+            if (i.isValid())
+                validCurves.add(i);
+        curves = validCurves;
     }
 
     private void addLineToBuffer(int pos, PointF startPoint, PointF endPoint) {
