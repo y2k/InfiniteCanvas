@@ -1,4 +1,4 @@
-package net.itwister.infinitecanvas;
+package net.itwister.infinitecanvas.canvas;
 
 import android.graphics.PointF;
 
@@ -9,7 +9,7 @@ import java.util.List;
 /**
  * Created on 1/21/2015.
  */
-public class RamerDouglasPeuckerOptimizer {
+class RamerDouglasPeuckerOptimizer {
 
     private float epsilon;
     private List<PointF> points;
@@ -24,8 +24,23 @@ public class RamerDouglasPeuckerOptimizer {
 
     public List<PointF> compute() {
         return points.size() > 3
-                ? douglasPeucker(points, 0, points.size() - 1, epsilon)
+                ? douglasPeucker(points, 0, points.size() - 1, getAddaptiveEpsilon())
                 : points;
+    }
+
+    private float getAddaptiveEpsilon() {
+        float minx = points.get(0).x;
+        float maxx = minx;
+        float miny = points.get(0).y;
+        float maxy = miny;
+        for (PointF p : points) {
+            minx = Math.min(minx, p.x);
+            maxx = Math.max(maxx, p.x);
+            miny = Math.min(miny, p.y);
+            maxy = Math.max(maxy, p.y);
+        }
+
+        return epsilon * (maxx-minx + maxy - miny) / 2 / 100;
     }
 
     private static List<PointF> douglasPeucker(List<PointF> points, int startIndex, int lastIndex, float epsilon) {

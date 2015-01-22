@@ -2,8 +2,6 @@ package net.itwister.infinitecanvas.canvas;
 
 import android.graphics.PointF;
 
-import net.itwister.infinitecanvas.RamerDouglasPeuckerOptimizer;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -21,7 +19,7 @@ class Curve {
     public void optimize() {
         RamerDouglasPeuckerOptimizer optimizer = new RamerDouglasPeuckerOptimizer();
         optimizer.setPoints(points);
-        optimizer.setEpsilon(3);
+        optimizer.setEpsilon(1);
         points = optimizer.compute();
     }
 

@@ -3,6 +3,8 @@ package net.itwister.infinitecanvas;
 import android.graphics.PointF;
 import android.test.AndroidTestCase;
 
+import net.itwister.infinitecanvas.canvas.RamerDouglasPeuckerOptimizer;
+
 /**
  * Created on 1/21/2015.
  */
