@@ -7,7 +7,7 @@
     <view
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        class="net.itwister.infinitecanvas.InfiniteCanvasView"
+        class="net.itwister.infinitecanvas.canvas.InfiniteCanvasView"
         android:id="@+id/view"
         android:layout_alignParentTop="true"
         android:layout_alignParentLeft="true"

@@ -1,4 +1,4 @@
-package net.itwister.infinitecanvas;
+package net.itwister.infinitecanvas.canvas;
 
 import android.graphics.PointF;
 

@@ -1,4 +1,4 @@
-package net.itwister.infinitecanvas;
+package net.itwister.infinitecanvas.canvas;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -8,6 +8,8 @@ import android.graphics.PointF;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
+
+import net.itwister.infinitecanvas.canvas.InfiniteCanvas;
 
 import java.util.Observable;
 import java.util.Observer;
