@@ -2,9 +2,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     tools:context=".MainActivity">
+    <item android:id="@+id/color"
+        android:title="Select color"
+        android:icon="@drawable/ic_color_lens_white_24dp"
+        app:showAsAction="ifRoom" />
     <item android:id="@+id/fullscreen"
         android:title="Fullscreen"
-        app:showAsAction="never" />
+        android:icon="@drawable/ic_fullscreen_white_24dp"
+        app:showAsAction="ifRoom" />
     <item android:id="@+id/createNew"
         android:title="Create new"
         app:showAsAction="never" />
