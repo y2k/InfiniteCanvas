@@ -10,9 +10,10 @@ import java.util.Observable;
 /**
  * Created on 1/21/2015.
  */
-class InfiniteCanvas extends Observable {
+public class InfiniteCanvas extends Observable {
 
     private List<Curve> curves = new ArrayList<>();
+    private UndoManager undoManager = new UndoManager(curves, this);
 
     PointF offset = new PointF();
 
@@ -26,15 +27,15 @@ class InfiniteCanvas extends Observable {
 
     public void addPoint(float x, float y) {
         lastCurves().addPoint(x - offset.x, y - offset.y);
-        notifyCurvesChanged();
+        notifyObservers();
     }
 
     public void endCurve() {
-        if (lastCurves().isValid())
+        if (lastCurves().isValid()) {
             lastCurves().optimize();
-        else
-            curves.remove(lastCurves());
-        notifyCurvesChanged();
+            undoManager.clear();
+        } else curves.remove(lastCurves());
+        notifyObservers();
     }
 
     private Curve lastCurves() {
@@ -48,19 +49,27 @@ class InfiniteCanvas extends Observable {
     public void addOffset(float x, float y) {
         offset.x += x;
         offset.y += y;
-        notifyCurvesChanged();
+        notifyObservers();
     }
 
     public PointF getOffset() {
         return offset;
     }
 
-    private void notifyCurvesChanged() {
-        setChanged();
-        notifyObservers();
-    }
-
     public void dump() {
         Log.v("InfiniteCanvas", "offset.x = " + offset.x + ", offset.y = " + offset.y);
+    }
+
+    public void undo() {
+        undoManager.undo();
+    }
+
+    public void redo() {
+        undoManager.redo();
+    }
+
+    @Override
+    public boolean hasChanged() {
+        return true;
     }
 }

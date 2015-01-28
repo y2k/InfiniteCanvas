@@ -15,21 +15,19 @@ import java.util.Observer;
 /**
  * Created on 1/21/2015.
  */
-public class InfiniteCanvasView extends View implements Observer {
+public class InfiniteCanvasView extends View {
 
-    InfiniteCanvas infiniteCanvas;
-    private Paint defaultPaint;
+    private InfiniteCanvas infiniteCanvas = new InfiniteCanvas();
+    private Paint defaultPaint = new Paint();
 
     public InfiniteCanvasView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        defaultPaint = new Paint();
         defaultPaint.setColor(Color.DKGRAY);
         defaultPaint.setStrokeWidth(0);
         defaultPaint.setAntiAlias(true);
 
-        infiniteCanvas = new InfiniteCanvas();
-        infiniteCanvas.addObserver(this);
+        infiniteCanvas.addObserver((observable, data) -> invalidate());
     }
 
     PointF startMovePoint;
@@ -64,13 +62,13 @@ public class InfiniteCanvasView extends View implements Observer {
     }
 
     @Override
-    public void update(Observable observable, Object data) {
-        invalidate();
-    }
-
-    @Override
     protected void onDraw(Canvas canvas) {
+        canvas.drawARGB(0, 0, 0, 0); // XXX: избавиться если понять как сбрасывать кэш
         canvas.translate(infiniteCanvas.getOffset().x, infiniteCanvas.getOffset().y);
         canvas.drawLines(infiniteCanvas.getVisibleScene(), defaultPaint);
+    }
+
+    public InfiniteCanvas getModel() {
+        return infiniteCanvas;
     }
 }

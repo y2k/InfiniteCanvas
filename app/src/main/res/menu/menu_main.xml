@@ -11,7 +11,7 @@
         android:icon="@drawable/ic_fullscreen_white_24dp"
         app:showAsAction="ifRoom" />
     <item android:id="@+id/createNew"
-        android:title="Create new"
+        android:title="@string/create_new"
         app:showAsAction="never" />
     <item android:id="@+id/action_settings"
           android:title="@string/action_settings"

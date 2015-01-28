@@ -8,15 +8,22 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import net.itwister.infinitecanvas.canvas.InfiniteCanvasView;
 import net.itwister.infinitecanvas.common.FullScreenUtils;
 
 
 public class MainActivity extends ActionBarActivity {
 
+    InfiniteCanvasView canvas;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        canvas = (InfiniteCanvasView) findViewById(R.id.canvas);
+        findViewById(R.id.undo).setOnClickListener(v -> canvas.getModel().undo());
+        findViewById(R.id.redo).setOnClickListener(v -> canvas.getModel().redo());
     }
 
     @Override
@@ -39,6 +46,7 @@ public class MainActivity extends ActionBarActivity {
         } else if (id == R.id.createNew) {
             startActivity(new Intent(this, MainActivity.class));
             finish();
+            overridePendingTransition(0, 0);
             return true;
         } else if (id == R.id.fullscreen) {
             FullScreenUtils.hideSystemUI(this);
