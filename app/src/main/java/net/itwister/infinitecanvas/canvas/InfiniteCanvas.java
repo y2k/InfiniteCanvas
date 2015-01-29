@@ -1,9 +1,12 @@
 package net.itwister.infinitecanvas.canvas;
 
+import android.graphics.Color;
 import android.graphics.PointF;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Observable;
 
@@ -12,17 +15,13 @@ import java.util.Observable;
  */
 public class InfiniteCanvas extends Observable {
 
+    private int colorForNewCurves = Color.DKGRAY;
     private List<Curve> curves = new ArrayList<>();
     private UndoManager undoManager = new UndoManager(curves, this);
-
-    PointF offset = new PointF();
-
-    public void updateViewPort(int left, int top, int right, int bottom) {
-        // TODO
-    }
+    private PointF offset = new PointF();
 
     public void beginCurve() {
-        curves.add(new Curve());
+        curves.add(new Curve(colorForNewCurves));
     }
 
     public void addPoint(float x, float y) {
@@ -79,5 +78,13 @@ public class InfiniteCanvas extends Observable {
 
     public String saveToString() {
         return new StringSerializer().serialize(curves);
+    }
+
+    public void setColor(int color) {
+        colorForNewCurves = color;
+    }
+
+    public Iterable<Curve> getVisibleCurves() {
+        return Collections.unmodifiableList(curves);
     }
 }

@@ -61,7 +61,7 @@ public class MainActivity extends ActionBarActivity {
         } else if (id == R.id.fullscreen) {
             FullScreenUtils.hideSystemUI(this);
         } else if (id==R.id.color) {
-            new PaletteDialog(this).show();
+            new PaletteDialog(this, color -> canvas.getModel().setColor(color)).show();
         }
 
         return super.onOptionsItemSelected(item);

@@ -9,28 +9,23 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.View;
 
-import java.util.Observable;
-import java.util.Observer;
-
 /**
  * Created on 1/21/2015.
  */
 public class InfiniteCanvasView extends View {
 
     private InfiniteCanvas infiniteCanvas = new InfiniteCanvas();
-    private Paint defaultPaint = new Paint();
+    private Paint drawPaint = new Paint();
+    private PointF startMovePoint;
 
     public InfiniteCanvasView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        defaultPaint.setColor(Color.DKGRAY);
-        defaultPaint.setStrokeWidth(0);
-        defaultPaint.setAntiAlias(true);
+        drawPaint.setStrokeWidth(0);
+        drawPaint.setAntiAlias(true);
 
         infiniteCanvas.addObserver((observable, data) -> invalidate());
     }
-
-    PointF startMovePoint;
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -56,16 +51,14 @@ public class InfiniteCanvasView extends View {
     }
 
     @Override
-    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        super.onLayout(changed, left, top, right, bottom);
-        infiniteCanvas.updateViewPort(left, top, right, bottom);
-    }
-
-    @Override
     protected void onDraw(Canvas canvas) {
-        canvas.drawARGB(0, 0, 0, 0); // XXX: избавиться если понять как сбрасывать кэш
+        canvas.drawARGB(0, 0, 0, 0); // XXX:
         canvas.translate(infiniteCanvas.getOffset().x, infiniteCanvas.getOffset().y);
-        canvas.drawLines(infiniteCanvas.getVisibleScene(), defaultPaint);
+
+        for (Curve c : infiniteCanvas.getVisibleCurves()) {
+            drawPaint.setColor(c.getColor());
+            canvas.drawLines(new FloatArraySerializer(c).serialize(), drawPaint);
+        }
     }
 
     public InfiniteCanvas getModel() {

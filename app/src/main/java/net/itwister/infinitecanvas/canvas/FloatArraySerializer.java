@@ -3,6 +3,7 @@ package net.itwister.infinitecanvas.canvas;
 import android.graphics.PointF;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -15,6 +16,10 @@ class FloatArraySerializer {
 
     FloatArraySerializer(List<Curve> curves) {
         this.curves = curves;
+    }
+
+    FloatArraySerializer(Curve curve) {
+        this(Arrays.asList(curve));
     }
 
     float[] serialize() {

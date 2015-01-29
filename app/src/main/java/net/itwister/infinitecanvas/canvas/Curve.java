@@ -13,6 +13,11 @@ import java.util.List;
 class Curve {
 
     private List<PointF> points = new ArrayList<>();
+    private int color;
+
+    public Curve(int color) {
+        this.color = color;
+    }
 
     public void addPoint(float x, float y) {
         points.add(new PointF(x, y));
@@ -35,5 +40,13 @@ class Curve {
 
     public boolean isValid() {
         return points.size() >= 2;
+    }
+
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public int getColor() {
+        return color;
     }
 }
