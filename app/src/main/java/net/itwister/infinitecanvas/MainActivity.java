@@ -60,6 +60,8 @@ public class MainActivity extends ActionBarActivity {
             return true;
         } else if (id == R.id.fullscreen) {
             FullScreenUtils.hideSystemUI(this);
+        } else if (id==R.id.color) {
+            new PaletteDialog(this).show();
         }
 
         return super.onOptionsItemSelected(item);
