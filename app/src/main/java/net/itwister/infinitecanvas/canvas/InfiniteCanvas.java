@@ -72,4 +72,12 @@ public class InfiniteCanvas extends Observable {
     public boolean hasChanged() {
         return true;
     }
+
+    public void loadFromString(String data) {
+        curves = new StringSerializer().deserialize(data);
+    }
+
+    public String saveToString() {
+        return new StringSerializer().serialize(curves);
+    }
 }

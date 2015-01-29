@@ -3,6 +3,8 @@ package net.itwister.infinitecanvas.canvas;
 import android.graphics.PointF;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -10,7 +12,7 @@ import java.util.List;
  */
 class Curve {
 
-    List<PointF> points = new ArrayList<>();
+    private List<PointF> points = new ArrayList<>();
 
     public void addPoint(float x, float y) {
         points.add(new PointF(x, y));
@@ -28,7 +30,7 @@ class Curve {
     }
 
     public Iterable<PointF> getPoints() {
-        return points;
+        return Collections.unmodifiableCollection(points);
     }
 
     public boolean isValid() {

@@ -1,6 +1,7 @@
 package net.itwister.infinitecanvas;
 
 import android.content.Intent;
+import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -24,6 +25,15 @@ public class MainActivity extends ActionBarActivity {
         canvas = (InfiniteCanvasView) findViewById(R.id.canvas);
         findViewById(R.id.undo).setOnClickListener(v -> canvas.getModel().undo());
         findViewById(R.id.redo).setOnClickListener(v -> canvas.getModel().redo());
+
+        if (savedInstanceState != null)
+            canvas.getModel().loadFromString(savedInstanceState.getString("canvas"));
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putString("canvas", canvas.getModel().saveToString());
     }
 
     @Override
