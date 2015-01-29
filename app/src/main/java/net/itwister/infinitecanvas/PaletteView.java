@@ -5,9 +5,13 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.os.AsyncTask;
+import android.support.v8.renderscript.Allocation;
+import android.support.v8.renderscript.RenderScript;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.android.example.hellocompute.ScriptC_palette;
 
 import java.util.Observable;
 
@@ -16,7 +20,7 @@ import java.util.Observable;
  */
 public class PaletteView extends View {
 
-    PaletteGenerator generator = new PaletteGenerator();
+    PaletteGenerator generator = new PaletteGenerator(getContext());
 
     public PaletteView(Context context) {
         super(context);
@@ -52,8 +56,13 @@ public class PaletteView extends View {
 
     private static class PaletteGenerator extends Observable {
 
-        Bitmap lastCreateBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
-        int size;
+        private Bitmap lastCreateBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+        private int size;
+        private Context context;
+
+        public PaletteGenerator(Context context) {
+            this.context = context;
+        }
 
         public Bitmap getBitmap() {
             return lastCreateBitmap;
@@ -68,19 +77,19 @@ public class PaletteView extends View {
 
                 @Override
                 protected Bitmap doInBackground(Void... params) {
-                    int[] buf = new int[size * size];
-                    int pos = 0;
-                    float[] hsv = new float[] { 0, 1, 0 };
-                    for (int y = 0; y < size; y+=1) {
-                        hsv[2] = 1 - (float) y / size;
-                        for (int x = 0; x < size; x += 1) {
-                            hsv[0] = 360f * x / size;
-                            buf[pos++] = Color.HSVToColor(0xFF, hsv);
-                        }
-                    }
+                    RenderScript rs = RenderScript.create(context);
+                    ScriptC_palette script = new ScriptC_palette(rs);
 
-                    Bitmap result = Bitmap.createBitmap(buf, size, size, Bitmap.Config.ARGB_8888);
-                    return result;
+                    Allocation in = Allocation.createFromBitmap(rs, Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888));
+                    Allocation out = Allocation.createTyped(rs, in.getType());
+                    script.set_width(size);
+                    script.set_height(size);
+                    script.forEach_root(in, out);
+
+                    Bitmap outBitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
+                    out.copyTo(outBitmap);
+
+                    return outBitmap;
                 }
 
                 @Override
