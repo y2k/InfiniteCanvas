@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.support.annotation.NonNull;
 import android.support.v8.renderscript.Allocation;
@@ -15,6 +16,9 @@ import android.view.Window;
 
 import com.android.example.hellocompute.ScriptC_palette;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.util.Observable;
 
 /**
@@ -79,11 +83,13 @@ public class PaletteDialog extends Dialog {
         private static class PaletteGenerator extends Observable {
 
             private Bitmap lastCreateBitmap = Bitmap.createBitmap(1, 1, Bitmap.Config.ARGB_8888);
+            private PaletteCache cache;
             private int size;
             private Context context;
 
             public PaletteGenerator(Context context) {
-                this.context = context;
+                this.context = context.getApplicationContext();
+                cache = new PaletteCache(context);
             }
 
             public Bitmap getBitmap() {
@@ -101,6 +107,14 @@ public class PaletteDialog extends Dialog {
             }
 
             private void recreatePalette() {
+                lastCreateBitmap = cache.get(size, size);
+                if (lastCreateBitmap == null) {
+                    createNewPalette();
+                    cache.save(lastCreateBitmap);
+                }
+            }
+
+            private void createNewPalette() {
                 RenderScript rs = RenderScript.create(context);
                 ScriptC_palette script = new ScriptC_palette(rs);
 
@@ -118,6 +132,35 @@ public class PaletteDialog extends Dialog {
 
             public int getColorForPoint(float x, float y) {
                 return lastCreateBitmap.getPixel((int)x, (int)y);
+            }
+
+            private static class PaletteCache {
+
+                private static final String FILE_NAME = "palette-cache.jpeg";
+                private Context context;
+
+                public PaletteCache(Context context) {
+                    this.context = context.getApplicationContext();
+                }
+
+                public Bitmap get(int width, int height) {
+                    Bitmap image = BitmapFactory.decodeFile(getFileToCachedImage().getAbsolutePath());
+                    return image != null && image.getWidth() == width && image.getHeight() == height ? image : null;
+                }
+
+                public void save(Bitmap image) {
+                    try {
+                        FileOutputStream out = new FileOutputStream(getFileToCachedImage());
+                        image.compress(Bitmap.CompressFormat.JPEG, 90, out);
+                        out.close();
+                    } catch (Exception e){
+                        throw new RuntimeException(e);
+                    }
+                }
+
+                private File getFileToCachedImage() {
+                    return new File(context.getCacheDir(), FILE_NAME);
+                }
             }
         }
     }
