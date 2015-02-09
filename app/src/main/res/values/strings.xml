@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name" translatable="false">InfiniteCanvas</string>
+    <string name="app_name" translatable="false">Infinite Canvas</string>
     <string name="action_settings">Settings</string>
     <string name="create_new">Create new</string>
 
